@@ -34,21 +34,21 @@
         "**/*.LXO": true,
         "**/*.ma": true,
         "**/*.MA": true,
-        "**/*.obj": true,
-        "**/*.OBJ": true,
-        "**/*.asset": true,
+        "**/*.obj": false,
+        "**/*.OBJ": false,
+        "**/*.asset": false,
         "**/*.cubemap": true,
         "**/*.flare": true,
         "**/*.mat": true,
         "**/*.meta": true,
-        "**/*.prefab": true,
-        "**/*.unity": true,
+        "**/*.prefab": false,
+        "**/*.unity": false,
         "build/": true,
         "Build/": true,
-        "Library/": true,
-        "library/": true,
-        "obj/": true,
-        "Obj/": true,
+        "Library/": false,
+        "library/": false,
+        "obj/": false,
+        "Obj/": false,
         "Logs/": true,
         "logs/": true,
         "ProjectSettings/": true,
@@ -57,10 +57,4 @@
         "Temp/": true
     },
     "dotnet.defaultSolution": "ba_fassadengruen.sln",
-    "favorites.resources": [
-        {
-            "filePath": "Unity.gitignore",
-            "group": "Default"
-        }
-    ]
 }
