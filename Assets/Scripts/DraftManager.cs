@@ -1,44 +1,36 @@
-using System;
 using System.Collections.Generic;
 using Google.XR.ARCoreExtensions.Samples.Geospatial;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using TMPro;
 
 
-[System.Serializable]
-public class Draft
+public class DraftManager : MonoBehaviour
 {
-    public string draftName;
-    public List<GeospatialAnchorHistory> anchorHistories;
-
-    public Draft(string draftName, List<GeospatialAnchorHistory> anchorHistories)
+    public GeospatialController geoController;
+    // Referenz auf das InputField, wo der Benutzer den Namen eingibt
+    public TMP_InputField draftNameInputField;
+    public void SaveDraftToFile()
     {
-        this.draftName = draftName;
-        this.anchorHistories = anchorHistories;
-    }
-}
+        // Hole die aktuelle History vom Controller
+        var historyCollection = geoController.GetAnchorHistory();
 
-public class DraftJsonManager : MonoBehaviour
-{
-    // Beispielmethode, um ein Draft als JSON zu speichern
-    public void SaveDraft(Draft draft)
-    {
-        // Dateiname basierend auf dem Draft-Namen
-        string fileName = draft.draftName + ".json";
+        // Sortieren, ggf. limitieren (wie im Original)
+        historyCollection.Collection.Sort((left, right) =>
+            right.CreatedTime.CompareTo(left.CreatedTime));
+        // etc.
 
-        // Verwende Application.persistentDataPath, um es auf dem Gerät zu speichern
+        // Pfad und Dateiname
+        string draftname = draftNameInputField.text;
+        string fileName = draftname + ".json";
         string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
-        // Konvertiere das Draft-Objekt in einen JSON-String
-        string json = JsonUtility.ToJson(draft, prettyPrint: true);
-
-        // Schreibe den JSON-String in die Datei
+        // 4) JSON
+        string json = JsonUtility.ToJson(historyCollection);
         File.WriteAllText(fullPath, json);
 
-        Debug.Log($"Draft '{draft.draftName}' saved to: {fullPath}");
+        Debug.Log($"Draft saved to: {fullPath}");
     }
-
-    // Hier noch mit Lade-Skript erweitern:
-    // public Draft LoadDraft(string draftName) { ... }
 }
+

@@ -44,6 +44,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
+    using System.IO;
 
     using UnityEngine.XR.ARFoundation;
     using UnityEngine.XR.ARSubsystems;
@@ -358,7 +359,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             _historyCollection.Collection.Clear();
             SnackBarText.text = "Anchor(s) cleared!";
             ClearAllButton.gameObject.SetActive(false);
-            SaveGeospatialAnchorHistory();
+            // SaveGeospatialAnchorHistory();
         }
 
         /// <summary>
@@ -1112,7 +1113,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                         _historyCollection.Collection.Add(history);
                         ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
                         SaveGeospatialAnchorHistory();
-
                         SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
                     }
                     else
@@ -1198,26 +1198,27 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 _anchorObjects.Count);
         }
 
-        // private void LoadGeospatialAnchorHistory()
-        // {
-        //     if (PlayerPrefs.HasKey(_persistentGeospatialAnchorsStorageKey))
-        //     {
-        //         _historyCollection = JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(
-        //             PlayerPrefs.GetString(_persistentGeospatialAnchorsStorageKey));
+        private void LoadGeospatialAnchorHistory()
+        {
+            if (PlayerPrefs.HasKey(_persistentGeospatialAnchorsStorageKey))
+            {
+                _historyCollection = JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(
+                    PlayerPrefs.GetString(_persistentGeospatialAnchorsStorageKey));
 
-        //         // Remove all records created more than 24 hours and update stored history.
-        //         DateTime current = DateTime.Now;
-        //         _historyCollection.Collection.RemoveAll(
-        //             data => current.Subtract(data.CreatedTime).Days > 0);
-        //         PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey,
-        //             JsonUtility.ToJson(_historyCollection));
-        //         PlayerPrefs.Save();
-        //     }
-        //     else
-        //     {
-        //         _historyCollection = new GeospatialAnchorHistoryCollection();
-        //     }
-        // }
+                // Remove all records created more than 24 hours and update stored history.
+                DateTime current = DateTime.Now;
+                _historyCollection.Collection.RemoveAll(
+                    data => current.Subtract(data.CreatedTime).Days > 0);
+                PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey,
+                    JsonUtility.ToJson(_historyCollection));
+                PlayerPrefs.Save();
+            }
+            else
+            {
+                _historyCollection = new GeospatialAnchorHistoryCollection();
+            }
+        }
+
 
         private void SaveGeospatialAnchorHistory()
         {
@@ -1235,6 +1236,11 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             PlayerPrefs.SetString(
                 _persistentGeospatialAnchorsStorageKey, JsonUtility.ToJson(_historyCollection));
             PlayerPrefs.Save();
+        }
+
+        public GeospatialAnchorHistoryCollection GetAnchorHistory()
+        {
+            return _historyCollection;
         }
 
         private void SwitchToARView(bool enable)
