@@ -1198,26 +1198,26 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 _anchorObjects.Count);
         }
 
-        private void LoadGeospatialAnchorHistory()
-        {
-            if (PlayerPrefs.HasKey(_persistentGeospatialAnchorsStorageKey))
-            {
-                _historyCollection = JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(
-                    PlayerPrefs.GetString(_persistentGeospatialAnchorsStorageKey));
+        // private void LoadGeospatialAnchorHistory()
+        // {
+        //     if (PlayerPrefs.HasKey(_persistentGeospatialAnchorsStorageKey))
+        //     {
+        //         _historyCollection = JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(
+        //             PlayerPrefs.GetString(_persistentGeospatialAnchorsStorageKey));
 
-                // Remove all records created more than 24 hours and update stored history.
-                DateTime current = DateTime.Now;
-                _historyCollection.Collection.RemoveAll(
-                    data => current.Subtract(data.CreatedTime).Days > 0);
-                PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey,
-                    JsonUtility.ToJson(_historyCollection));
-                PlayerPrefs.Save();
-            }
-            else
-            {
-                _historyCollection = new GeospatialAnchorHistoryCollection();
-            }
-        }
+        //         // Remove all records created more than 24 hours and update stored history.
+        //         DateTime current = DateTime.Now;
+        //         _historyCollection.Collection.RemoveAll(
+        //             data => current.Subtract(data.CreatedTime).Days > 0);
+        //         PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey,
+        //             JsonUtility.ToJson(_historyCollection));
+        //         PlayerPrefs.Save();
+        //     }
+        //     else
+        //     {
+        //         _historyCollection = new GeospatialAnchorHistoryCollection();
+        //     }
+        // }
 
         private void SaveGeospatialAnchorHistory()
         {
