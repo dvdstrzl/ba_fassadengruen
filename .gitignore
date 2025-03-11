@@ -525,3 +525,218 @@ xcuserdata/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,macos,visualstudiocode,xcode,csharp
+Assets/Resources/Figma_UI/Figma Downloader.asset
+Assets/Resources/FigmaUI/Files/iPhone Mockups.figma
+Assets/3Dynamite/Real Ivy/Real Ivy Manual.pdf
+Assets/3Dynamite/Real Ivy/Real Ivy Rendering Pipeline Setup.pdf
+Assets/3Dynamite/Real Ivy/DefaultPresets/Atlased_Leves_Example.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Low_Poly_Example.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Preset_01.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Preset_02.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Preset_03.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Preset_04.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Preset_05.asset
+Assets/3Dynamite/Real Ivy/DefaultPresets/Preset_06.asset
+Assets/3Dynamite/Real Ivy/Example Scenes/No Animated.unity
+Assets/3Dynamite/Real Ivy/Example Scenes/Procedural Baked.unity
+Assets/3Dynamite/Real Ivy/Example Scenes/Procedural Runtime.unity
+Assets/3Dynamite/Real Ivy/Example Scenes/Materials/Ground.mat
+Assets/3Dynamite/Real Ivy/Example Scenes/Materials/Walls.mat
+Assets/3Dynamite/Real Ivy/Example Scenes/Physics Materials/ZeroFriction.physicMaterial
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/1.asset
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/1.prefab
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/2.asset
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/2.prefab
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/3.asset
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/3.prefab
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/4.asset
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/4.prefab
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/5.asset
+Assets/3Dynamite/Real Ivy/Example Scenes/Prefabs/5.prefab
+Assets/3Dynamite/Real Ivy/GuiSkins/RealIvyWindow.guiskin
+Assets/3Dynamite/Real Ivy/GuiSkins/Fonts/Muli-Black.ttf
+Assets/3Dynamite/Real Ivy/GuiSkins/Fonts/Muli-Bold_WorldSpace.ttf
+Assets/3Dynamite/Real Ivy/GuiSkins/Fonts/Muli-Bold.ttf
+Assets/3Dynamite/Real Ivy/GuiSkins/Fonts/Muli-ExtraBold.ttf
+Assets/3Dynamite/Real Ivy/GuiSkins/Fonts/Muli-Regular.ttf
+Assets/3Dynamite/Real Ivy/GuiSkins/Fonts/Muli-SemiBold.ttf
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Black.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Dropdown_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Dropdown.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Light.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Little_Normal.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Normal_2.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Normal_3.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Normal.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Orange.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Section_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Button_Section.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Cross.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Down_Arrow.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/InfoIcon.png
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Leave_Icon.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Leave.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Logo.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Material.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Object_Picker.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Preset.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Slider_Thumb_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Slider_Thumb.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Slider.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Square.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Title_bg.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Toggle_Off_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Toggle_Off.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Toggle_On_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Toggle_On.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/ToggleRound_Off_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/ToggleRound_Off.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/ToggleRound_On_Active.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/ToggleRound_On.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_AddLeave.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Cut.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Move.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Optimize.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Paint.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Refine.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Remove.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Shave.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Tool_Smooth.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/ToolsPanel_bg.psd
+Assets/3Dynamite/Real Ivy/GuiSkins/Images/Up_Arrow.psd
+Assets/3Dynamite/Real Ivy/Prefabs/PooleableIvy.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Bark_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Environment.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Ivy_Low.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/IvyPosition.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_01_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_01_02.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_02_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_02_02.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_03_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_03_02.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_04_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_04_02.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_05_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leave_05_02.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Leaves_Atlas.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Materials/Thorn_01.mat
+Assets/3Dynamite/Real Ivy/SampleResources/Models/Leave_01.FBX
+Assets/3Dynamite/Real Ivy/SampleResources/Models/Leaves_Atlas.FBX
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_01_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_01_02.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_02_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_02_02.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_03_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_03_02.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_04_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_04_02.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_05_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_05_02.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_Atlas_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_Atlas_02.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_Atlas_03.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Leave_Atlas_04.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Prefabs/Thorn_01.prefab
+Assets/3Dynamite/Real Ivy/SampleResources/Scripts/IvyCaster.cs
+Assets/3Dynamite/Real Ivy/SampleResources/Scripts/MouseLook.cs
+Assets/3Dynamite/Real Ivy/SampleResources/Scripts/PlaceTargetWithMouse.cs
+Assets/3Dynamite/Real Ivy/SampleResources/Scripts/PlayerController.cs
+Assets/3Dynamite/Real Ivy/SampleResources/Scripts/RigidbodyFirstPersonController.cs
+Assets/3Dynamite/Real Ivy/SampleResources/Shaders/Bark.shader
+Assets/3Dynamite/Real Ivy/SampleResources/Shaders/FlatLeaves_Simple.shader
+Assets/3Dynamite/Real Ivy/SampleResources/Shaders/FlatLeaves.shader
+Assets/3Dynamite/Real Ivy/SampleResources/Shaders/IvyLow.shader
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Bark_01_alb.png
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Bark_01_hm.png
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Bark_01_nm.png
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Bark_01_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Ivy_Low_alb.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Ivy_Low_nm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Ivy_Low_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_01_alb_01.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_01_alb_02.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_01_hm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_01_nm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_01_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_02_alb_01.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_02_alb_02.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_02_hm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_02_nm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_02_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_03_alb_01.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_03_alb_02.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_03_hm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_03_nm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_03_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_04_alb_01.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_04_alb_02.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_04_hm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_04_nm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_04_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_05_alb_01.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_05_alb_02.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_05_hm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_05_nm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_05_sm.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Leave_05_Source.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/LeavesAtlasExample.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Noise_01.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Thorn_01_alb.psd
+Assets/3Dynamite/Real Ivy/SampleResources/Textures/Thorn_01_hm.png
+Assets/3Dynamite/Real Ivy/Scripts/Common/BranchContainer.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/BranchPoint.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/BranchSegment.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/Constants.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/EditorIvyGrowth.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/EditorMeshBuilder.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/GrowthBuilder.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/InfoPool.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/IvyContainer.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/IvyInfo.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/IvyParameters.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/IvyPreset.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/LeafPoint.cs
+Assets/3Dynamite/Real Ivy/Scripts/Common/RealIvyMathUtils.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/IvyInfoCustomEditor.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyTools.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindowController.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/AbstractMode.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeAddLeaves.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeCut.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeDelete.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeMove.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeOptimize.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModePaint.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeRefine.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeShave.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/Modes/ModeSmooth.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIUtils/CustomDisplayDialog.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIUtils/DropDownButton.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIUtils/UIUtils.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIDropDownZone.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone_BranchesSettings.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone_GeneralSettings.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone_GrowthSettings.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone_LeavesSettings.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone_MainButtons.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone_Presets.cs
+Assets/3Dynamite/Real Ivy/Scripts/Editor/RealIvyWindow/UIZones/UIZone.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/IvyController.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RTBranchContainer.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RTBranchPoint.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RTIvyContainer.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RTLeafPoint.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RTMeshData.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RTVertexData.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/RuntimeGrowthParameters.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Baked/RTBakedMeshBuilder.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Baked/RTIvy.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Baked/RuntimeBakedIvy.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Baked/Editor/RTBakedIvyCustomEditor.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Editor/IvyControllerEditor.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Procedural/RTIvyGrowth.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Procedural/RuntimeProceduralIvy.cs
+Assets/3Dynamite/Real Ivy/Scripts/Runtime/Procedural/Editor/RTProceduralIvyCustomEditor.cs
