@@ -10,20 +10,34 @@ public class NavigationManager : MonoBehaviour
     public GameObject draftPanel;
     public GameObject menuPanel;
     public GameObject EnterDraftNamePopup;
+    public Transform draftsListContainer;      // ScrollView-Content für die Entwürfe
+    public GameObject draftListItemPrefab;     // UI-Element für eine einzelne Zeile
+    public DraftManager draftManager;          // Referenz auf DraftManager
+
+    public void closeAllPanels()
+    {
+        plantSelectionPanel.SetActive(false);
+        draftPanel.SetActive(false);
+        EnterDraftNamePopup.SetActive(false);
+        plantSelectionPanel.SetActive(false);
+    }
     public void OnClick_Pflanzen()
     {
+        closeAllPanels();
         // Panel mit Pflanzenliste ein-/ausblenden
         plantSelectionPanel.SetActive(!plantSelectionPanel.activeSelf);
     }
 
     public void OnClick_Entwurf()
     {
+        closeAllPanels();
         // Panel mit Entwurfs-Funktionen (Speichern, Öffnen, etc.) ein-/ausblenden
         draftPanel.SetActive(!draftPanel.activeSelf);
     }
 
     public void OnClick_Menü()
     {
+        closeAllPanels();
         // Hauptmenü oder Einstellungen öffnen
         menuPanel.SetActive(!menuPanel.activeSelf);
     }
@@ -31,6 +45,7 @@ public class NavigationManager : MonoBehaviour
     // Wird aufgerufen, wenn der Benutzer auf "Entwurf" → "Speichern" klickt
     public void OnClickSaveDialog()
     {
+        closeAllPanels();
         EnterDraftNamePopup.SetActive(!EnterDraftNamePopup.activeSelf);
     }
 
@@ -41,12 +56,9 @@ public class NavigationManager : MonoBehaviour
         draftPanel.SetActive(false);
     }
 
-    public Transform draftsListContainer;      // ScrollView-Content für die Entwürfe
-    public GameObject draftListItemPrefab;     // UI-Element für eine einzelne Zeile
-    public DraftManager draftManager;          // Referenz auf DraftManager
-
     public void ShowSavedDrafts()
     {
+        closeAllPanels();
         // 1) Bestehende Listeneinträge löschen
         foreach (Transform child in draftsListContainer)
         {
@@ -77,6 +89,7 @@ public class NavigationManager : MonoBehaviour
     {
         // Delegiere das Laden an den DraftManager
         draftManager.LoadDraftFromFile(draftName);
+        closeAllPanels();
     }
 }
 
