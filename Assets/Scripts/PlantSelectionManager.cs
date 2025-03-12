@@ -11,16 +11,19 @@ public class PlantSelectionManager : MonoBehaviour
 
     void Start()
     {
-        // Stelle sicher, dass das erste Pflanzen-Prefab standardmäßig ausgewählt ist
-        if (plantPrefabs != null && plantPrefabs.Length > 0)
-        {
-            currentPlantPrefab = plantPrefabs[0];
-            UpdateAnchorPrefab();
-        }
-        else
-        {
-            Debug.LogError("Keine Pflanzen-Prefabs zugewiesen!");
-        }
+        // ARStreetscapeGeometryManager soll nur einen nackten ARAnchor erzeugen
+        streetscapeGeometryManager.AnchorPrefab = null;
+
+        // if (plantPrefabs != null && plantPrefabs.Length > 0)
+        // {
+        //     currentPlantPrefab = plantPrefabs[0];
+        //     // Falls ARStreetscapeGeometryManager.AnchorPrefab hier auch updaten soll:
+        //     // UpdateAnchorPrefab();
+        // }
+        // else
+        // {
+        //     Debug.LogError("Keine Pflanzen-Prefabs zugewiesen!");
+        // }
     }
 
     // Funktion, die von den UI-Buttons aufgerufen wird, um die Pflanze auszuwählen
@@ -30,24 +33,34 @@ public class PlantSelectionManager : MonoBehaviour
         {
             currentPlantPrefab = plantPrefabs[plantIndex];
             UpdateAnchorPrefab();
+            Debug.Log("Ausgewählte Pflanze: " + currentPlantPrefab.name);
         }
         else
         {
-            Debug.LogError("Ungültiger Pflanzenindex!");
+            Debug.LogError("Ungültiger Pflanzenobjekt-Index!");
         }
+    }
+
+    // Helpermethode (für PlaceAnchorByScreenTap)
+    public GameObject GetPrefabByName(string prefabName)
+    {
+        foreach (var prefab in plantPrefabs)
+        {
+            if (prefab.name == prefabName)
+                return prefab;
+        }
+        return null;
     }
 
     // Aktualisiert das AnchorPrefab im ARStreetscapeGeometryManager
     private void UpdateAnchorPrefab()
     {
-        if (streetscapeGeometryManager != null)
+        if (streetscapeGeometryManager != null && currentPlantPrefab != null)
         {
             streetscapeGeometryManager.AnchorPrefab = currentPlantPrefab;
-            Debug.Log("Anchor Prefab aktualisiert auf: " + currentPlantPrefab.name);
-        }
-        else
-        {
-            Debug.LogError("ARStreetscapeGeometryManager nicht zugewiesen!");
+            Debug.Log("AnchorPrefab aktualisiert auf: " + currentPlantPrefab.name);
+            Debug.Log("streetscapeGeometryManager.AnchorPrefab:" + streetscapeGeometryManager.AnchorPrefab.name);
+
         }
     }
 }

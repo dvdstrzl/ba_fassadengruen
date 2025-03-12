@@ -13,31 +13,28 @@ public class DraftManager : MonoBehaviour
     public TMP_InputField draftNameInputField;
     public void SaveDraftToFile()
     {
-        // Hole die aktuelle History vom Controller
+        // aktuelle History vom GeospatialController
         var historyCollection = geoController.GetAnchorHistory();
 
-        // Sortieren, ggf. limitieren (wie im Original)
+        // (Sortieren)
         historyCollection.Collection.Sort((left, right) =>
             right.CreatedTime.CompareTo(left.CreatedTime));
-        // etc.
 
         // Pfad und Dateiname
-        string draftname = draftNameInputField.text;
-        string fileName = draftname + ".json";
-        string fullPath = Path.Combine(Application.persistentDataPath, fileName);
-
-        // 4) JSON
+        string draftName = draftNameInputField.text;
+        string filePath = Path.Combine(Application.persistentDataPath, draftName + ".json");
         string json = JsonUtility.ToJson(historyCollection);
-        File.WriteAllText(fullPath, json);
 
-        Debug.Log($"Draft saved to: {fullPath}");
+        // in JSON schreiben
+        File.WriteAllText(filePath, json);
+        Debug.Log($"Draft saved to: {filePath}");
     }
     public void LoadDraftFromFile(string draftName)
     {
-        // 1) Szene leeren
+        // Szene leeren
         geoController.OnClearAllClicked();
 
-        // 2) Pfad ermitteln
+        // Pfad ermitteln
         string filePath = Path.Combine(Application.persistentDataPath, draftName + ".json");
         if (!File.Exists(filePath))
         {
@@ -45,7 +42,7 @@ public class DraftManager : MonoBehaviour
             return;
         }
 
-        // 3) JSON einlesen
+        // JSON einlesen
         string json = File.ReadAllText(filePath);
         GeospatialAnchorHistoryCollection loadedCollection =
             JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(json);
@@ -56,10 +53,10 @@ public class DraftManager : MonoBehaviour
             return;
         }
 
-        // 4) Setze das _historyCollection im GeospatialController
+        //  _historyCollection im GeospatialController
         geoController.SetHistoryCollection(loadedCollection);
 
-        // 5) ResolveHistory -> Anker platzieren
+        // ResolveHistory -> Anker platzieren
         geoController.ForceResolveHistory();
 
         Debug.Log($"Draft '{draftName}' loaded successfully!");

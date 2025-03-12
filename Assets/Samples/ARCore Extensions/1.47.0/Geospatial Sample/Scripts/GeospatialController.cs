@@ -107,6 +107,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// </summary>
         public Material StreetscapeGeometryMaterialTerrain;
 
+        public PlantSelectionManager plantSelectionManager;
+
+
         [Header("UI Elements")]
 
         /// <summary>
@@ -266,7 +269,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// <summary>
         /// Determines if the anchor settings panel is visible in the UI.
         /// </summary>
-        private bool _showAnchorSettingsPanel = false;
+        private bool _showAnchorSettingsPanel = true;
 
         /// <summary>
         /// Represents the current anchor type of the anchor being placed in the scene.
@@ -967,96 +970,67 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return (mapDistance - 2.0f) / (20.0f - 2.0f) + 1.0f;
         }
 
-        private void PlaceAnchorByScreenTap(Vector2 position)
+        private void PlaceAnchorByScreenTap(Vector2 screenPos)
         {
-            if (_streetscapeGeometryVisibility)
+            // 1) Raycast gegen StreetscapeGeometry
+            List<XRRaycastHit> hitResults = new List<XRRaycastHit>();
+            if (RaycastManager.RaycastStreetscapeGeometry(screenPos, ref hitResults))
             {
-                // Raycast against streetscapeGeometry.
-                List<XRRaycastHit> hitResults = new List<XRRaycastHit>();
-                if (RaycastManager.RaycastStreetscapeGeometry(position, ref hitResults))
+                // Erstes Ergebnis holen
+                XRRaycastHit hit = hitResults[0];
+                // Pose
+                Pose pose = hit.pose;
+                // ARStreetscapeGeometry holen
+                ARStreetscapeGeometry geometry = StreetscapeGeometryManager.GetStreetscapeGeometry(hit.trackableId);
+                if (geometry == null) return;
+
+                // 2) Manuell Anchor erzeugen
+                ARAnchor anchor = StreetscapeGeometryManager.AttachAnchor(geometry, pose);
+                if (anchor == null)
                 {
-                    if (_anchorType == AnchorType.Rooftop || _anchorType == AnchorType.Terrain)
-                    {
-                        var streetscapeGeometry =
-                            StreetscapeGeometryManager.GetStreetscapeGeometry(
-                                hitResults[0].trackableId);
-                        if (streetscapeGeometry == null)
-                        {
-                            return;
-                        }
-
-                        if (_streetscapegeometryGOs.ContainsKey(streetscapeGeometry.trackableId))
-                        {
-                            Pose modifiedPose = new Pose(hitResults[0].pose.position,
-                                Quaternion.LookRotation(Vector3.right, Vector3.up));
-
-                            GeospatialAnchorHistory history =
-                                CreateHistory(modifiedPose, _anchorType);
-
-                            // Anchor returned will be null, the coroutine will handle creating
-                            // the anchor when the promise is done.
-                            PlaceARAnchor(history, modifiedPose, hitResults[0].trackableId);
-                        }
-                    }
-                    else
-                    {
-                        GeospatialAnchorHistory history = CreateHistory(hitResults[0].pose,
-                            _anchorType);
-                        var anchor = PlaceARAnchor(history, hitResults[0].pose,
-                            hitResults[0].trackableId);
-                        if (anchor != null)
-                        {
-                            _historyCollection.Collection.Add(history);
-                        }
-
-                        ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
-                        SaveGeospatialAnchorHistory();
-                    }
-                }
-
-                return;
-            }
-
-            // Raycast against detected planes.
-            List<ARRaycastHit> planeHitResults = new List<ARRaycastHit>();
-            RaycastManager.Raycast(
-                position, planeHitResults, TrackableType.Planes | TrackableType.FeaturePoint);
-            if (planeHitResults.Count > 0)
-            {
-                GeospatialAnchorHistory history = CreateHistory(planeHitResults[0].pose,
-                    _anchorType);
-
-                if (_anchorType == AnchorType.Rooftop)
-                {
-                    // The coroutine will create the anchor when the promise is done.
-                    Quaternion eunRotation = CreateRotation(history);
-                    ResolveAnchorOnRooftopPromise rooftopPromise =
-                        AnchorManager.ResolveAnchorOnRooftopAsync(
-                            history.Latitude, history.Longitude,
-                            0, eunRotation);
-
-                    StartCoroutine(CheckRooftopPromise(rooftopPromise, history));
+                    Debug.LogWarning("Could not attach anchor to geometry!");
                     return;
                 }
 
-                var anchor = PlaceGeospatialAnchor(history);
-                if (anchor != null)
+                // 3) Pflanzen-Prefab
+                string prefabName = plantSelectionManager.currentPlantPrefab.name; // oder manuell definieren?
+                GameObject prefab = plantSelectionManager.GetPrefabByName(prefabName);
+                if (!prefab)
                 {
-                    _historyCollection.Collection.Add(history);
+                    Debug.LogWarning($"Prefab not found: {prefabName}, fallback to first plant");
+                    prefab = plantSelectionManager.plantPrefabs[0];
                 }
 
-                ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
-                SaveGeospatialAnchorHistory();
+                // 4) Instantiate
+                GameObject newPlant = Instantiate(prefab, anchor.transform);
+                newPlant.transform.localPosition = Vector3.zero;
+                newPlant.transform.localRotation = Quaternion.identity;
+
+                // 5) Speichern in _historyCollection
+                //   - lat/lon/alt aus EarthManager.Convert(pose)
+                GeospatialPose geoPose = EarthManager.Convert(pose);
+                var history = new GeospatialAnchorHistory(
+                    geoPose.Latitude,
+                    geoPose.Longitude,
+                    geoPose.Altitude,
+                    AnchorType.Geospatial, // falls  "Fassade" = geospatial denifiert wird
+                    geoPose.EunRotation,
+                    prefabName
+                );
+
+                _historyCollection.Collection.Add(history);
+                SaveGeospatialAnchorHistory();  // optional
+                Debug.Log("Anchor + Plant placed, history saved!");
             }
         }
 
-        private GeospatialAnchorHistory CreateHistory(Pose pose, AnchorType anchorType)
+        private GeospatialAnchorHistory CreateHistory(Pose pose, AnchorType anchorType, string prefabName)
         {
             GeospatialPose geospatialPose = EarthManager.Convert(pose);
 
             GeospatialAnchorHistory history = new GeospatialAnchorHistory(
                 geospatialPose.Latitude, geospatialPose.Longitude, geospatialPose.Altitude,
-                anchorType, geospatialPose.EunRotation);
+                anchorType, geospatialPose.EunRotation, prefabName);
             return history;
         }
 
@@ -1109,6 +1083,19 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
                     if (anchor != null)
                     {
+                        // Prefab über PlantSelectionManager besorgen
+                        GameObject plantPrefab = plantSelectionManager.GetPrefabByName(history.PlantPrefabName);
+                        if (!plantPrefab)
+                        {
+                            // Fallback
+                            plantPrefab = plantSelectionManager.plantPrefabs[0];
+                        }
+
+                        // Instantiate as child of anchor
+                        GameObject newPlant = Instantiate(plantPrefab, anchor.transform);
+                        newPlant.transform.localPosition = Vector3.zero;
+                        newPlant.transform.localRotation = Quaternion.identity;
+                        newPlant.name = plantPrefab.name + "(Planted)";
                         _anchorObjects.Add(anchor.gameObject);
                         _historyCollection.Collection.Add(history);
                         ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
@@ -1153,12 +1140,29 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
             if (anchor != null)
             {
-                GameObject anchorGO = history.AnchorType == AnchorType.Geospatial ?
-                    Instantiate(GeospatialPrefab, anchor.transform) :
-                    Instantiate(TerrainPrefab, anchor.transform);
-                anchor.gameObject.SetActive(!terrain);
-                anchorGO.transform.parent = anchor.gameObject.transform;
+                // 1) Das richtige Prefab anhand des Namens
+                GameObject plantPrefab = plantSelectionManager.GetPrefabByName(history.PlantPrefabName);
+                if (!plantPrefab)
+                {
+                    plantPrefab = plantSelectionManager.plantPrefabs[0]; // Fallback
+                }
+                // 2) Anker + Pflanze
+                GameObject newPlant = Instantiate(plantPrefab, anchor.transform);
+                newPlant.transform.localPosition = Vector3.zero;
+                newPlant.transform.localRotation = Quaternion.identity;
+                newPlant.name = plantPrefab.name + "(Planted)";
+
+                // GameObject anchorGO = history.AnchorType == AnchorType.Geospatial ?
+                //     Instantiate(GeospatialPrefab, anchor.transform) :
+                //     Instantiate(TerrainPrefab, anchor.transform);
+                // anchor.gameObject.SetActive(!terrain);
+                // anchorGO.transform.parent = anchor.gameObject.transform;
+
+                // 3) AR-Szene-Management
                 _anchorObjects.Add(anchor.gameObject);
+                _historyCollection.Collection.Add(history);
+                ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                SaveGeospatialAnchorHistory();
                 SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
             }
             else
@@ -1169,28 +1173,44 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return anchor;
         }
 
+        // private void ResolveHistory()
+        // {
+        //     if (!_shouldResolvingHistory)
+        //     {
+        //         return;
+        //     }
+
+        //     _shouldResolvingHistory = false;
+        //     foreach (var history in _historyCollection.Collection)
+        //     {
+        //         switch (history.AnchorType)
+        //         {
+        //             case AnchorType.Rooftop:
+        //                 PlaceARAnchor(history);
+        //                 break;
+        //             case AnchorType.Terrain:
+        //                 PlaceARAnchor(history);
+        //                 break;
+        //             default:
+        //                 PlaceGeospatialAnchor(history);
+        //                 break;
+        //         }
+        //     }
+
+        //     ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+        //     SnackBarText.text = string.Format("{0} anchor(s) set from history.",
+        //         _anchorObjects.Count);
+        // }
+
         private void ResolveHistory()
         {
-            if (!_shouldResolvingHistory)
-            {
-                return;
-            }
-
+            if (!_shouldResolvingHistory) return;
             _shouldResolvingHistory = false;
+
             foreach (var history in _historyCollection.Collection)
             {
-                switch (history.AnchorType)
-                {
-                    case AnchorType.Rooftop:
-                        PlaceARAnchor(history);
-                        break;
-                    case AnchorType.Terrain:
-                        PlaceARAnchor(history);
-                        break;
-                    default:
-                        PlaceGeospatialAnchor(history);
-                        break;
-                }
+                // Alle AnchorType-Fälle in EINE Methode
+                PlaceARAnchor(history);
             }
 
             ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
@@ -1428,7 +1448,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             GeometryToggle.gameObject.SetActive(false);
             AnchorSettingButton.gameObject.SetActive(false);
             AnchorSettingPanel.gameObject.SetActive(false);
-            GeospatialAnchorToggle.gameObject.SetActive(false);
+            GeospatialAnchorToggle.gameObject.SetActive(true);
             TerrainAnchorToggle.gameObject.SetActive(false);
             RooftopAnchorToggle.gameObject.SetActive(false);
             ClearAllButton.gameObject.SetActive(false);

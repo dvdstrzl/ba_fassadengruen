@@ -9,7 +9,8 @@ public class NavigationManager : MonoBehaviour
     public GameObject plantSelectionPanel;
     public GameObject draftPanel;
     public GameObject menuPanel;
-    public GameObject EnterDraftNamePopup;
+    public GameObject enterDraftNamePopup;
+    public GameObject draftsList;
     public Transform draftsListContainer;      // ScrollView-Content für die Entwürfe
     public GameObject draftListItemPrefab;     // UI-Element für eine einzelne Zeile
     public DraftManager draftManager;          // Referenz auf DraftManager
@@ -18,8 +19,9 @@ public class NavigationManager : MonoBehaviour
     {
         plantSelectionPanel.SetActive(false);
         draftPanel.SetActive(false);
-        EnterDraftNamePopup.SetActive(false);
+        enterDraftNamePopup.SetActive(false);
         plantSelectionPanel.SetActive(false);
+        draftsList.SetActive(false);
     }
     public void OnClick_Pflanzen()
     {
@@ -45,15 +47,14 @@ public class NavigationManager : MonoBehaviour
     // Wird aufgerufen, wenn der Benutzer auf "Entwurf" → "Speichern" klickt
     public void OnClickSaveDialog()
     {
-        closeAllPanels();
-        EnterDraftNamePopup.SetActive(!EnterDraftNamePopup.activeSelf);
+        enterDraftNamePopup.SetActive(!enterDraftNamePopup.activeSelf);
     }
 
     // Wird aufgerufen, wenn der Benutzer im Panel auf "Speichern bestätigen" klickt
     public void OnClickConfirmSave()
     {
         OnClickSaveDialog();
-        draftPanel.SetActive(false);
+        draftsList.SetActive(false);
     }
 
     public void ShowSavedDrafts()
@@ -82,6 +83,8 @@ public class NavigationManager : MonoBehaviour
             Button openButton = listItem.transform.Find("OpenButton").GetComponent<Button>();
             openButton.onClick.AddListener(() => OnClickOpenDraft(fileName));
         }
+
+        draftsList.SetActive(true);
     }
 
     // Wird aufgerufen, wenn der Nutzer auf "Öffnen" in einer Zeile klickt

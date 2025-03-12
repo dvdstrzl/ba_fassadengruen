@@ -88,6 +88,11 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public Quaternion EunRotation;
 
         /// <summary>
+        ///  Name of the specific prefab attached to this anchor
+        /// </summary>
+        public string PlantPrefabName;
+
+        /// <summary>
         /// Construct a Geospatial Anchor history.
         /// </summary>
         /// <param name="time">The time this Geospatial Anchor was created.</param>
@@ -104,7 +109,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// orientation.
         /// </param>
         public GeospatialAnchorHistory(DateTime time, double latitude, double longitude,
-            double altitude, AnchorType anchorType, Quaternion eunRotation)
+            double altitude, AnchorType anchorType, Quaternion eunRotation, string plantPrefabName)
         {
             SerializedTime = time.ToString();
             Latitude = latitude;
@@ -113,6 +118,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             Heading = 0.0f;
             AnchorType = anchorType;
             EunRotation = eunRotation;
+            PlantPrefabName = plantPrefabName;
         }
 
         /// <summary>
@@ -132,9 +138,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// </param>
         public GeospatialAnchorHistory(
             double latitude, double longitude, double altitude, AnchorType anchorType,
-            Quaternion eunRotation) :
+            Quaternion eunRotation, string plantPrefabName) :
             this(DateTime.Now, latitude, longitude, altitude, anchorType,
-            eunRotation)
+            eunRotation, plantPrefabName)
         {
         }
 
