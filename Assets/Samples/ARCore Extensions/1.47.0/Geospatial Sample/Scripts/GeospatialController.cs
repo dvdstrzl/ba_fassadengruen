@@ -359,7 +359,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             _historyCollection.Collection.Clear();
             SnackBarText.text = "Anchor(s) cleared!";
             ClearAllButton.gameObject.SetActive(false);
-            // SaveGeospatialAnchorHistory();
+            SaveGeospatialAnchorHistory();
         }
 
         /// <summary>
@@ -1241,6 +1241,17 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public GeospatialAnchorHistoryCollection GetAnchorHistory()
         {
             return _historyCollection;
+        }
+
+        public void SetHistoryCollection(GeospatialAnchorHistoryCollection newCollection)
+        {
+            _historyCollection = newCollection;
+        }
+
+        public void ForceResolveHistory()
+        {
+            _shouldResolvingHistory = true;
+            ResolveHistory();
         }
 
         private void SwitchToARView(bool enable)

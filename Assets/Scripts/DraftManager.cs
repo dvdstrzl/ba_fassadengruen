@@ -32,5 +32,38 @@ public class DraftManager : MonoBehaviour
 
         Debug.Log($"Draft saved to: {fullPath}");
     }
+    public void LoadDraftFromFile(string draftName)
+    {
+        // 1) Szene leeren
+        geoController.OnClearAllClicked();
+
+        // 2) Pfad ermitteln
+        string filePath = Path.Combine(Application.persistentDataPath, draftName + ".json");
+        if (!File.Exists(filePath))
+        {
+            Debug.LogWarning($"Draft file {filePath} not found!");
+            return;
+        }
+
+        // 3) JSON einlesen
+        string json = File.ReadAllText(filePath);
+        GeospatialAnchorHistoryCollection loadedCollection =
+            JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(json);
+
+        if (loadedCollection == null)
+        {
+            Debug.LogError("Failed to parse JSON or empty collection.");
+            return;
+        }
+
+        // 4) Setze das _historyCollection im GeospatialController
+        geoController.SetHistoryCollection(loadedCollection);
+
+        // 5) ResolveHistory -> Anker platzieren
+        geoController.ForceResolveHistory();
+
+        Debug.Log($"Draft '{draftName}' loaded successfully!");
+    }
 }
+
 
