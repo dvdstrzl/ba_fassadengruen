@@ -364,6 +364,44 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             ClearAllButton.gameObject.SetActive(false);
             SaveGeospatialAnchorHistory();
         }
+        public void ClearCurrentDraftData()
+        {
+            // Löscht alle aktuell platzierten Anchors
+            foreach (var anchor in _anchorObjects)
+            {
+                Destroy(anchor);
+            }
+            _anchorObjects.Clear();
+
+            // Lösch aktuelle HistoryCollection
+            if (_historyCollection != null)
+            {
+                _historyCollection.Collection.Clear();
+                // Persistiert die leere History, damit alte Daten nicht versehentlich geladen werden
+                PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey, JsonUtility.ToJson(_historyCollection));
+                PlayerPrefs.Save();
+            }
+        }
+        private void AddHistoryEntry(GeospatialAnchorHistory history)
+        {
+            // Füge den neuen Eintrag hinzu
+            _historyCollection.Collection.Add(history);
+
+            // Sortiere die Collection von neu nach alt (neuester Eintrag zuerst)
+            _historyCollection.Collection.Sort((left, right) =>
+                right.CreatedTime.CompareTo(left.CreatedTime));
+
+            // Überprüfe, ob die Kapazität überschritten wurde – falls ja, entferne die ältesten Einträge
+            if (_historyCollection.Collection.Count > _storageLimit)
+            {
+                _historyCollection.Collection.RemoveRange(_storageLimit, _historyCollection.Collection.Count - _storageLimit);
+            }
+
+            // Speichere die aktualisierte History persist in PlayerPrefs
+            PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey, JsonUtility.ToJson(_historyCollection));
+            PlayerPrefs.Save();
+        }
+
 
         /// <summary>
         /// Callback handling "Continue" button click event in AR View.
@@ -991,6 +1029,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     Debug.LogWarning("Could not attach anchor to geometry!");
                     return;
                 }
+                _anchorObjects.Add(anchor.gameObject);
 
                 // 3) Pflanzen-Prefab
                 string prefabName = plantSelectionManager.currentPlantPrefab.name; // oder manuell definieren?
@@ -1013,7 +1052,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     geoPose.Latitude,
                     geoPose.Longitude,
                     geoPose.Altitude,
-                    AnchorType.Geospatial, // falls  "Fassade" = geospatial denifiert wird
+                    _anchorType, // falls  "Fassade" = geospatial denifiert wird
                     geoPose.EunRotation,
                     prefabName
                 );
@@ -1209,8 +1248,14 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
             foreach (var history in _historyCollection.Collection)
             {
-                // Alle AnchorType-Fälle in EINE Methode
-                PlaceARAnchor(history);
+                if (history.AnchorType == AnchorType.Geospatial)
+                {
+                    PlaceGeospatialAnchor(history);
+                }
+                else
+                {
+                    PlaceARAnchor(history);
+                }
             }
 
             ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
@@ -1238,7 +1283,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 _historyCollection = new GeospatialAnchorHistoryCollection();
             }
         }
-
 
         private void SaveGeospatialAnchorHistory()
         {

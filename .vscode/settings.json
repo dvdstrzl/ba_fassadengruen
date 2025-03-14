@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ba_fassadengruen.sln",
+    "dotnet.defaultSolution": "ba_fassadengruen.sln"
 }

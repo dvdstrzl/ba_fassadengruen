@@ -10,6 +10,7 @@ public class NavigationManager : MonoBehaviour
     public GameObject draftPanel;
     public GameObject menuPanel;
     public GameObject enterDraftNamePopup;
+    public TMP_InputField draftNameInputField;
     public GameObject draftsList;
     public Transform draftsListContainer;      // ScrollView-Content für die Entwürfe
     public GameObject draftListItemPrefab;     // UI-Element für eine einzelne Zeile
@@ -51,8 +52,9 @@ public class NavigationManager : MonoBehaviour
     }
 
     // Wird aufgerufen, wenn der Benutzer im Panel auf "Speichern bestätigen" klickt
-    public void OnClickConfirmSave()
+    public void OnClickConfirmSaveDraft()
     {
+        draftManager.SaveDraftToFile(draftNameInputField.text);
         OnClickSaveDialog();
         draftsList.SetActive(false);
     }
