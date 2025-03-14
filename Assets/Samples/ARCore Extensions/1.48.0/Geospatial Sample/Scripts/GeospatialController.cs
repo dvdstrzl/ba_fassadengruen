@@ -1086,69 +1086,55 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return eunRotation;
         }
 
-        private ARAnchor PlaceARAnchor(GeospatialAnchorHistory history, Pose pose = new Pose(),
-            TrackableId trackableId = new TrackableId())
+        private ARAnchor PlaceARAnchor(GeospatialAnchorHistory history, Pose pose = new Pose(), TrackableId trackableId = new TrackableId(), bool addToHistory = true)
         {
             Quaternion eunRotation = CreateRotation(history);
             ARAnchor anchor = null;
             switch (history.AnchorType)
             {
                 case AnchorType.Rooftop:
-                    ResolveAnchorOnRooftopPromise rooftopPromise =
-                        AnchorManager.ResolveAnchorOnRooftopAsync(
-                            history.Latitude, history.Longitude,
-                            0, eunRotation);
-
+                    ResolveAnchorOnRooftopPromise rooftopPromise = AnchorManager.ResolveAnchorOnRooftopAsync(
+                        history.Latitude, history.Longitude, 0, eunRotation);
                     StartCoroutine(CheckRooftopPromise(rooftopPromise, history));
                     return null;
-
                 case AnchorType.Terrain:
-                    ResolveAnchorOnTerrainPromise terrainPromise =
-                        AnchorManager.ResolveAnchorOnTerrainAsync(
-                            history.Latitude, history.Longitude,
-                            0, eunRotation);
-
+                    ResolveAnchorOnTerrainPromise terrainPromise = AnchorManager.ResolveAnchorOnTerrainAsync(
+                        history.Latitude, history.Longitude, 0, eunRotation);
                     StartCoroutine(CheckTerrainPromise(terrainPromise, history));
                     return null;
-
                 case AnchorType.Geospatial:
-                    ARStreetscapeGeometry streetscapegeometry =
-                        StreetscapeGeometryManager.GetStreetscapeGeometry(trackableId);
+                    ARStreetscapeGeometry streetscapegeometry = StreetscapeGeometryManager.GetStreetscapeGeometry(trackableId);
                     if (streetscapegeometry != null)
                     {
-                        anchor = StreetscapeGeometryManager.AttachAnchor(
-                            streetscapegeometry, pose);
+                        anchor = StreetscapeGeometryManager.AttachAnchor(streetscapegeometry, pose);
                     }
-
                     if (anchor != null)
                     {
-                        // Prefab über PlantSelectionManager besorgen
                         GameObject plantPrefab = plantSelectionManager.GetPrefabByName(history.PlantPrefabName);
                         if (!plantPrefab)
                         {
-                            // Fallback
                             plantPrefab = plantSelectionManager.plantPrefabs[0];
                         }
-
-                        // Instantiate as child of anchor
                         GameObject newPlant = Instantiate(plantPrefab, anchor.transform);
                         newPlant.transform.localPosition = Vector3.zero;
                         newPlant.transform.localRotation = Quaternion.identity;
                         newPlant.name = plantPrefab.name + "(Planted)";
                         _anchorObjects.Add(anchor.gameObject);
-                        _historyCollection.Collection.Add(history);
+                        // Nur hinzufügen, wenn es sich um eine neue Platzierung handelt:
+                        if (addToHistory)
+                        {
+                            _historyCollection.Collection.Add(history);
+                            SaveGeospatialAnchorHistory();
+                        }
                         ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
-                        SaveGeospatialAnchorHistory();
                         SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
                     }
                     else
                     {
                         SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
                     }
-
                     break;
             }
-
             return anchor;
         }
 
@@ -1245,8 +1231,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         {
             if (!_shouldResolvingHistory) return;
             _shouldResolvingHistory = false;
-
-            foreach (var history in _historyCollection.Collection)
+            // Erstelle eine Kopie der Liste, um Modifikationen während der Iteration zu vermeiden.
+            var historyList = new List<GeospatialAnchorHistory>(_historyCollection.Collection);
+            foreach (var history in historyList)
             {
                 if (history.AnchorType == AnchorType.Geospatial)
                 {
@@ -1254,14 +1241,13 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 }
                 else
                 {
-                    PlaceARAnchor(history);
+                    PlaceARAnchor(history, new Pose(), new TrackableId(), false); // false: nicht erneut zur History hinzufügen
                 }
             }
-
             ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
-            SnackBarText.text = string.Format("{0} anchor(s) set from history.",
-                _anchorObjects.Count);
+            SnackBarText.text = string.Format("{0} anchor(s) set from history.", _anchorObjects.Count);
         }
+
 
         private void LoadGeospatialAnchorHistory()
         {
