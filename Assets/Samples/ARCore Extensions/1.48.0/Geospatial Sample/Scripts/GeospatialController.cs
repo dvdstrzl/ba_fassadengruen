@@ -247,7 +247,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// <summary>
         /// The limitation of how many Geospatial Anchors can be stored in local storage.
         /// </summary>
-        private const int _storageLimit = 100;
+        private const int _storageLimit = 300;
 
         /// <summary>
         /// Accuracy threshold for orientation yaw accuracy in degrees that can be treated as
@@ -382,25 +382,25 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 PlayerPrefs.Save();
             }
         }
-        private void AddHistoryEntry(GeospatialAnchorHistory history)
-        {
-            // Füge den neuen Eintrag hinzu
-            _historyCollection.Collection.Add(history);
+        // private void AddHistoryEntry(GeospatialAnchorHistory history)
+        // {
+        //     // Füge den neuen Eintrag hinzu
+        //     _historyCollection.Collection.Add(history);
 
-            // Sortiere die Collection von neu nach alt (neuester Eintrag zuerst)
-            _historyCollection.Collection.Sort((left, right) =>
-                right.CreatedTime.CompareTo(left.CreatedTime));
+        //     // Sortiere die Collection von neu nach alt (neuester Eintrag zuerst)
+        //     _historyCollection.Collection.Sort((left, right) =>
+        //         right.CreatedTime.CompareTo(left.CreatedTime));
 
-            // Überprüfe, ob die Kapazität überschritten wurde – falls ja, entferne die ältesten Einträge
-            if (_historyCollection.Collection.Count > _storageLimit)
-            {
-                _historyCollection.Collection.RemoveRange(_storageLimit, _historyCollection.Collection.Count - _storageLimit);
-            }
+        //     // Überprüfe, ob die Kapazität überschritten wurde – falls ja, entferne die ältesten Einträge
+        //     if (_historyCollection.Collection.Count > _storageLimit)
+        //     {
+        //         _historyCollection.Collection.RemoveRange(_storageLimit, _historyCollection.Collection.Count - _storageLimit);
+        //     }
 
-            // Speichere die aktualisierte History persist in PlayerPrefs
-            PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey, JsonUtility.ToJson(_historyCollection));
-            PlayerPrefs.Save();
-        }
+        //     // Speichere die aktualisierte History persist in PlayerPrefs
+        //     PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey, JsonUtility.ToJson(_historyCollection));
+        //     PlayerPrefs.Save();
+        // }
 
 
         /// <summary>
@@ -1016,14 +1016,17 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 // Erstes Ergebnis holen
                 XRRaycastHit hit = hitResults[0];
-                // Pose
-                Pose pose = hit.pose;
-                // ARStreetscapeGeometry holen
+                // Ursprüngliche Pose
+                Pose originalPose = hit.pose;
+                // Korrigierte Pose: Nur Yaw wird beibehalten, Pitch und Roll werden auf 0 gesetzt.
+                Pose correctedPose = new Pose(originalPose.position, GetHorizontalRotation(originalPose.rotation));
+
+                // 2) ARStreetscapeGeometry holen
                 ARStreetscapeGeometry geometry = StreetscapeGeometryManager.GetStreetscapeGeometry(hit.trackableId);
                 if (geometry == null) return;
 
-                // 2) Manuell Anchor erzeugen
-                ARAnchor anchor = StreetscapeGeometryManager.AttachAnchor(geometry, pose);
+                // 3) Anchor mit korrigierter Pose erzeugen
+                ARAnchor anchor = StreetscapeGeometryManager.AttachAnchor(geometry, correctedPose);
                 if (anchor == null)
                 {
                     Debug.LogWarning("Could not attach anchor to geometry!");
@@ -1031,8 +1034,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 }
                 _anchorObjects.Add(anchor.gameObject);
 
-                // 3) Pflanzen-Prefab
-                string prefabName = plantSelectionManager.currentPlantPrefab.name; // oder manuell definieren?
+                // 4) Pflanzen-Prefab laden
+                string prefabName = plantSelectionManager.currentPlantPrefab.name;
                 GameObject prefab = plantSelectionManager.GetPrefabByName(prefabName);
                 if (!prefab)
                 {
@@ -1040,28 +1043,28 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     prefab = plantSelectionManager.plantPrefabs[0];
                 }
 
-                // 4) Instantiate
+                // 5) Instantiate – hierbei wird die lokale Rotation zurückgesetzt, sodass das Objekt horizontal bleibt.
                 GameObject newPlant = Instantiate(prefab, anchor.transform);
                 newPlant.transform.localPosition = Vector3.zero;
                 newPlant.transform.localRotation = Quaternion.identity;
 
-                // 5) Speichern in _historyCollection
-                //   - lat/lon/alt aus EarthManager.Convert(pose)
-                GeospatialPose geoPose = EarthManager.Convert(pose);
+                // 6) Speichern in _historyCollection mit der korrigierten Rotation
+                GeospatialPose geoPose = EarthManager.Convert(correctedPose);
                 var history = new GeospatialAnchorHistory(
                     geoPose.Latitude,
                     geoPose.Longitude,
                     geoPose.Altitude,
-                    _anchorType, // falls  "Fassade" = geospatial denifiert wird
-                    geoPose.EunRotation,
+                    _anchorType,
+                    correctedPose.rotation, // Hier wird die korrigierte Rotation gespeichert.
                     prefabName
                 );
 
                 _historyCollection.Collection.Add(history);
-                SaveGeospatialAnchorHistory();  // optional
+                SaveGeospatialAnchorHistory();
                 Debug.Log("Anchor + Plant placed, history saved!");
             }
         }
+
 
         private GeospatialAnchorHistory CreateHistory(Pose pose, AnchorType anchorType, string prefabName)
         {
@@ -1073,18 +1076,44 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return history;
         }
 
+        // SAMPLE IMPLEMENTIERUNG:
+        // private Quaternion CreateRotation(GeospatialAnchorHistory history)
+        // {
+        //     Quaternion eunRotation = history.EunRotation;
+        //     if (eunRotation == Quaternion.identity)
+        //     {
+        //         // This history is from a previous app version and EunRotation was not used.
+        //         eunRotation =
+        //             Quaternion.AngleAxis(180f - (float)history.Heading, Vector3.up);
+        //     }
+
+        //     return eunRotation;
+        // }
+
+        // EIGENE VARIANTE
         private Quaternion CreateRotation(GeospatialAnchorHistory history)
         {
             Quaternion eunRotation = history.EunRotation;
             if (eunRotation == Quaternion.identity)
             {
-                // This history is from a previous app version and EunRotation was not used.
-                eunRotation =
-                    Quaternion.AngleAxis(180f - (float)history.Heading, Vector3.up);
+                // Berechne aus Heading, falls EunRotation nicht gesetzt wurde.
+                eunRotation = Quaternion.AngleAxis(180f - (float)history.Heading, Vector3.up);
             }
-
-            return eunRotation;
+            // Stelle sicher, dass nur die Yaw-Komponente erhalten bleibt.
+            return GetHorizontalRotation(eunRotation);
         }
+
+
+        private Quaternion GetHorizontalRotation(Quaternion rotation)
+        {
+            // Nur die Y-Achse (Yaw) bleibt erhalten, Pitch und Roll werden auf 0 gesetzt.
+            // float yaw = rotation.eulerAngles.y;
+            // return Quaternion.Euler(0, yaw, 0);
+            // Projektion auf die horizontale Ebene (Y-Achse)
+            Vector3 flatForward = Vector3.ProjectOnPlane(rotation * Vector3.forward, Vector3.up).normalized;
+            return Quaternion.LookRotation(flatForward, Vector3.up);
+        }
+
 
         private ARAnchor PlaceARAnchor(GeospatialAnchorHistory history, Pose pose = new Pose(), TrackableId trackableId = new TrackableId(), bool addToHistory = true)
         {
