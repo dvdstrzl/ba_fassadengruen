@@ -9,17 +9,15 @@ using TMPro;
 public class DraftManager : MonoBehaviour
 {
     public GeospatialController geoController;
-    // Referenz auf das InputField, wo der Benutzer den Namen eingibt
 
     public void SaveDraftToFile(string draftName)
     {
-        // Hole die aktuelle History vom Controller
+        // Holt die aktuelle History vom Controller
         var historyCollection = geoController.GetAnchorHistory();
 
-        // Sortieren, ggf. limitieren (wie im Original)
+        // Sortieren, ggf. limitieren
         historyCollection.Collection.Sort((left, right) =>
             right.CreatedTime.CompareTo(left.CreatedTime));
-        // etc.
 
         // Pfad und Dateiname
         string fileName = draftName + ".json";
@@ -33,10 +31,10 @@ public class DraftManager : MonoBehaviour
     }
     public void LoadDraftFromFile(string draftName)
     {
-        // 1) Szene leeren
+        // Aktuelle Szene leeren
         geoController.OnClearAllClicked();
 
-        // 2) Pfad ermitteln
+        // Pfad ermitteln
         string filePath = Path.Combine(Application.persistentDataPath, draftName + ".json");
         if (!File.Exists(filePath))
         {
@@ -44,7 +42,7 @@ public class DraftManager : MonoBehaviour
             return;
         }
 
-        // 3) JSON einlesen
+        // JSON einlesen
         string json = File.ReadAllText(filePath);
         GeospatialAnchorHistoryCollection loadedCollection =
             JsonUtility.FromJson<GeospatialAnchorHistoryCollection>(json);
@@ -55,10 +53,10 @@ public class DraftManager : MonoBehaviour
             return;
         }
 
-        // 4) Setze das _historyCollection im GeospatialController
+        //  _historyCollection im GeospatialController setzen
         geoController.SetHistoryCollection(loadedCollection);
 
-        // 5) ResolveHistory -> Anker platzieren
+        // ResolveHistory -> Anker platzieren
         geoController.ForceResolveHistory();
 
         Debug.Log($"Draft '{draftName}' loaded successfully!");

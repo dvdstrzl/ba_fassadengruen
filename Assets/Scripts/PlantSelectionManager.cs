@@ -13,17 +13,6 @@ public class PlantSelectionManager : MonoBehaviour
     {
         // ARStreetscapeGeometryManager soll nur einen nackten ARAnchor erzeugen
         streetscapeGeometryManager.AnchorPrefab = null;
-
-        // if (plantPrefabs != null && plantPrefabs.Length > 0)
-        // {
-        //     currentPlantPrefab = plantPrefabs[0];
-        //     // Falls ARStreetscapeGeometryManager.AnchorPrefab hier auch updaten soll:
-        //     // UpdateAnchorPrefab();
-        // }
-        // else
-        // {
-        //     Debug.LogError("Keine Pflanzen-Prefabs zugewiesen!");
-        // }
     }
 
     // Funktion, die von den UI-Buttons aufgerufen wird, um die Pflanze auszuwählen

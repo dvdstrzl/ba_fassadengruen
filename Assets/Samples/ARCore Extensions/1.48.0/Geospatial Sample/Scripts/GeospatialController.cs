@@ -382,25 +382,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 PlayerPrefs.Save();
             }
         }
-        // private void AddHistoryEntry(GeospatialAnchorHistory history)
-        // {
-        //     // Füge den neuen Eintrag hinzu
-        //     _historyCollection.Collection.Add(history);
-
-        //     // Sortiere die Collection von neu nach alt (neuester Eintrag zuerst)
-        //     _historyCollection.Collection.Sort((left, right) =>
-        //         right.CreatedTime.CompareTo(left.CreatedTime));
-
-        //     // Überprüfe, ob die Kapazität überschritten wurde – falls ja, entferne die ältesten Einträge
-        //     if (_historyCollection.Collection.Count > _storageLimit)
-        //     {
-        //         _historyCollection.Collection.RemoveRange(_storageLimit, _historyCollection.Collection.Count - _storageLimit);
-        //     }
-
-        //     // Speichere die aktualisierte History persist in PlayerPrefs
-        //     PlayerPrefs.SetString(_persistentGeospatialAnchorsStorageKey, JsonUtility.ToJson(_historyCollection));
-        //     PlayerPrefs.Save();
-        // }
 
 
         /// <summary>
@@ -1017,16 +998,19 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 // Erstes Ergebnis holen
                 XRRaycastHit hit = hitResults[0];
                 // Ursprüngliche Pose
-                Pose originalPose = hit.pose;
-                // Korrigierte Pose: Nur Yaw wird beibehalten, Pitch und Roll werden auf 0 gesetzt.
-                Pose correctedPose = new Pose(originalPose.position, GetHorizontalRotation(originalPose.rotation));
+                // Pose originalPose = hit.pose;
+                 // Statt hit.pose.rotation wird eine feste, horizontale Rotation verwendet.
+                // Hier einfach: Quaternion.identity – oder evtl. eine Rotation, die
+                // anhand der Geometrie berechnet wird (z.B. GetHorizontalRotation(Quaternion.identity)).
+                Quaternion fixedRotation = Quaternion.identity;
+                Pose fixedPose = new Pose(hit.pose.position, fixedRotation);
 
                 // 2) ARStreetscapeGeometry holen
                 ARStreetscapeGeometry geometry = StreetscapeGeometryManager.GetStreetscapeGeometry(hit.trackableId);
                 if (geometry == null) return;
 
                 // 3) Anchor mit korrigierter Pose erzeugen
-                ARAnchor anchor = StreetscapeGeometryManager.AttachAnchor(geometry, correctedPose);
+                ARAnchor anchor = StreetscapeGeometryManager.AttachAnchor(geometry, fixedPose);
                 if (anchor == null)
                 {
                     Debug.LogWarning("Could not attach anchor to geometry!");
@@ -1043,19 +1027,20 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     prefab = plantSelectionManager.plantPrefabs[0];
                 }
 
-                // 5) Instantiate – hierbei wird die lokale Rotation zurückgesetzt, sodass das Objekt horizontal bleibt.
-                GameObject newPlant = Instantiate(prefab, anchor.transform);
-                newPlant.transform.localPosition = Vector3.zero;
-                newPlant.transform.localRotation = Quaternion.identity;
+                // 5) Instantiate – lokale Rotation wird zurückgesetzt, sodass das Objekt horizontal bleibt.
+                GameObject newPlant = Instantiate(prefab, anchor.transform.position, fixedRotation);
+                // newPlant.transform.localPosition = Vector3.zero;
+                // newPlant.transform.localRotation = Quaternion.identity;
+                newPlant.transform.SetParent(anchor.transform, worldPositionStays: true);
 
                 // 6) Speichern in _historyCollection mit der korrigierten Rotation
-                GeospatialPose geoPose = EarthManager.Convert(correctedPose);
+                GeospatialPose geoPose = EarthManager.Convert(fixedPose);
                 var history = new GeospatialAnchorHistory(
                     geoPose.Latitude,
                     geoPose.Longitude,
                     geoPose.Altitude,
                     _anchorType,
-                    correctedPose.rotation, // Hier wird die korrigierte Rotation gespeichert.
+                    fixedRotation,
                     prefabName
                 );
 
@@ -1076,27 +1061,13 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return history;
         }
 
-        // SAMPLE IMPLEMENTIERUNG:
-        // private Quaternion CreateRotation(GeospatialAnchorHistory history)
-        // {
-        //     Quaternion eunRotation = history.EunRotation;
-        //     if (eunRotation == Quaternion.identity)
-        //     {
-        //         // This history is from a previous app version and EunRotation was not used.
-        //         eunRotation =
-        //             Quaternion.AngleAxis(180f - (float)history.Heading, Vector3.up);
-        //     }
-
-        //     return eunRotation;
-        // }
-
         // EIGENE VARIANTE
         private Quaternion CreateRotation(GeospatialAnchorHistory history)
         {
             Quaternion eunRotation = history.EunRotation;
             if (eunRotation == Quaternion.identity)
             {
-                // Berechne aus Heading, falls EunRotation nicht gesetzt wurde.
+                // Berechnen aus Heading, falls EunRotation nicht gesetzt wurde.
                 eunRotation = Quaternion.AngleAxis(180f - (float)history.Heading, Vector3.up);
             }
             // Stelle sicher, dass nur die Yaw-Komponente erhalten bleibt.
@@ -1227,40 +1198,11 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return anchor;
         }
 
-        // private void ResolveHistory()
-        // {
-        //     if (!_shouldResolvingHistory)
-        //     {
-        //         return;
-        //     }
-
-        //     _shouldResolvingHistory = false;
-        //     foreach (var history in _historyCollection.Collection)
-        //     {
-        //         switch (history.AnchorType)
-        //         {
-        //             case AnchorType.Rooftop:
-        //                 PlaceARAnchor(history);
-        //                 break;
-        //             case AnchorType.Terrain:
-        //                 PlaceARAnchor(history);
-        //                 break;
-        //             default:
-        //                 PlaceGeospatialAnchor(history);
-        //                 break;
-        //         }
-        //     }
-
-        //     ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
-        //     SnackBarText.text = string.Format("{0} anchor(s) set from history.",
-        //         _anchorObjects.Count);
-        // }
-
         private void ResolveHistory()
         {
             if (!_shouldResolvingHistory) return;
             _shouldResolvingHistory = false;
-            // Erstelle eine Kopie der Liste, um Modifikationen während der Iteration zu vermeiden.
+            // Erstellt eine Kopie der Liste, um Modifikationen während der Iteration zu vermeiden.
             var historyList = new List<GeospatialAnchorHistory>(_historyCollection.Collection);
             foreach (var history in historyList)
             {
