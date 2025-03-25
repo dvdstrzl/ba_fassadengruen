@@ -23,7 +23,7 @@ public class DraftManager : MonoBehaviour
         string fileName = draftName + ".json";
         string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
-        // 4) JSON
+        // JSON
         string json = JsonUtility.ToJson(historyCollection);
         File.WriteAllText(fullPath, json);
 

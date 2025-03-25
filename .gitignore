@@ -526,3 +526,5 @@ xcuserdata/
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,macos,visualstudiocode,xcode,csharp
 Assets/Models/
+Assets/MobileARTemplateAssets/
+Assets/Resources/
